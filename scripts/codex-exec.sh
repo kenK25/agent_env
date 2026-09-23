@@ -15,8 +15,15 @@ mkdir -p .agents/reviews
 out=".agents/reviews/$(date +%Y%m%d-%H%M%S)-exec-$(basename "$note" .md).md"
 
 codex exec --sandbox "$sandbox" --output-last-message "$out" \
-  "AGENTS.md に従い、次の handoff ノートのタスクを実行してください。完了後、ノートの「結果」欄に記入する内容を最終メッセージとして出力してください。
+  "AGENTS.md に従い、次の handoff ノートのタスクを実行してください。完了後、ノートの「結果」欄に記入する内容を最終メッセージとして出力してください（ノート自体は編集しないでください。ラッパーが追記します）。
 
 $(cat "$note")"
 
-echo "[codex-exec] result: $out"
+# Write the result back into the note; 「結果」 is the last section of TEMPLATE.md, so appending lands there.
+{
+  echo
+  echo "<!-- codex-exec $(date +%Y-%m-%dT%H:%M:%S%z) -->"
+  cat "$out"
+} >> "$note"
+
+echo "[codex-exec] result: $out (appended to $note)"
