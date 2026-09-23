@@ -1,0 +1,6 @@
+.env
+.env.*
+node_modules/
+.codex-prompt.md
+.agents/reviews/
+.claude/settings.local.json
